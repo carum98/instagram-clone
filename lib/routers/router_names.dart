@@ -2,6 +2,6 @@
 
 const LOGIN = '/login';
 const REGISTER = '/register';
-const FEED = '/feed';
+const MAIN = '/feed';
 
 const LOADING = '/loading';

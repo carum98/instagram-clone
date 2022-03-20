@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class FeedPage extends StatelessWidget {
-  const FeedPage({Key? key}) : super(key: key);
+class SearchPage extends StatelessWidget {
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Instagram'),
+        title: const Text('Search'),
         centerTitle: false,
       ),
       body: const Center(
-        child: Text('Feed'),
+        child: Text('Search'),
       ),
     );
   }

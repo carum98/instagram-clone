@@ -15,7 +15,7 @@ void main() async {
       if (user != null) {
         Navigator.pushNamedAndRemoveUntil(
           navigator.currentContext!,
-          FEED,
+          MAIN,
           (Route<dynamic> route) => false,
         );
       } else {
@@ -39,8 +39,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
       ),
       navigatorKey: navigator,
       initialRoute: LOADING,

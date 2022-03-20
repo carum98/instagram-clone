@@ -42,6 +42,7 @@ class Auth {
 
       userCredential.user!.updateDisplayName(name);
 
+      String url = '';
       if (image != null) {
         Reference reference =
             _storage.ref('users').child(userCredential.user!.uid).child('profile.jpg');
@@ -49,7 +50,7 @@ class Auth {
         UploadTask uploadTask = reference.putData(image);
         TaskSnapshot taskSnapshot = await uploadTask;
 
-        final url = await taskSnapshot.ref.getDownloadURL();
+        url = await taskSnapshot.ref.getDownloadURL();
 
         userCredential.user!.updatePhotoURL(url);
       }
@@ -58,7 +59,7 @@ class Auth {
         uid: userCredential.user!.uid,
         name: name,
         email: email,
-        photoUrl: userCredential.user!.photoURL ?? '',
+        photoUrl: url,
         bio: bio,
       );
 
@@ -76,5 +77,11 @@ class Auth {
 
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Future<UserModel> getUser() async {
+    final userData = await _store.collection('users').doc(_auth.currentUser!.uid).get();
+
+    return UserModel.fromMap(userData.data()!);
   }
 }
