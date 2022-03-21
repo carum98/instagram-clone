@@ -51,6 +51,16 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.dark,
         darkTheme: ThemeData(
           brightness: Brightness.dark,
+          appBarTheme: const AppBarTheme(
+            color: Colors.black,
+            elevation: 0,
+          ),
+          scaffoldBackgroundColor: Colors.black,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            elevation: 0,
+            backgroundColor: Colors.black,
+            type: BottomNavigationBarType.fixed,
+          ),
         ),
         navigatorKey: navigator,
         initialRoute: LOADING,

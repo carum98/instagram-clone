@@ -3,6 +3,7 @@ import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/provider/post_provider.dart';
 import 'package:instagram_clone/routers/router_names.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class FeedPage extends StatelessWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -51,67 +52,76 @@ class FeedPage extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<List<PostModel>>(
-          stream: context.read<PostProvider>().postsStream,
-          initialData: context.read<PostProvider>().posts,
-          builder: (context, snapshot) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final post = snapshot.data![index];
+        stream: context.read<PostProvider>().postsStream,
+        initialData: context.read<PostProvider>().posts,
+        builder: (context, snapshot) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              final post = snapshot.data![index];
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(post.user.photoUrl),
-                            ),
-                            onTap: () =>
-                                Navigator.of(context).pushNamed(PROFILE, arguments: post.user),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(post.user.photoUrl),
                           ),
-                          const SizedBox(width: 8),
-                          Text(post.user.name),
-                          const Spacer(),
-                          const Icon(Icons.more_vert),
-                        ],
-                      ),
+                          onTap: () =>
+                              Navigator.of(context).pushNamed(PROFILE, arguments: post.user),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(post.user.name),
+                        const Spacer(),
+                        const Icon(Icons.more_vert),
+                      ],
                     ),
-                    Image(
-                      image: NetworkImage(post.imageUrl),
-                      height: 250,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
+                  ),
+                  Image(
+                    image: NetworkImage(post.imageUrl),
+                    height: 250,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.favorite_border_outlined),
+                            SizedBox(width: 15),
+                            Icon(Icons.comment_outlined),
+                            SizedBox(width: 15),
+                            Icon(Icons.send_outlined),
+                            Spacer(),
+                            Icon(Icons.bookmark_border_outlined),
+                          ],
+                        ),
+                        Text('${post.likes.length} likes'),
+                        Text(post.post),
+                        Text(
+                          'Show ${[].length} comments',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        Text(
+                          timeago.format(post.createdAt),
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: const [
-                              Icon(Icons.favorite_border_outlined),
-                              SizedBox(width: 15),
-                              Icon(Icons.comment_outlined),
-                              SizedBox(width: 15),
-                              Icon(Icons.send_outlined),
-                              Spacer(),
-                              Icon(Icons.bookmark_border_outlined),
-                            ],
-                          ),
-                          Text(post.post),
-                          Text('${post.likes.length} likes'),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          }),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

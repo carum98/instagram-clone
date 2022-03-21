@@ -56,12 +56,12 @@ class _MainPageState extends State<MainPage> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add',
+            icon: Icon(Icons.movie_creation_outlined),
+            label: 'Reels',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite',
+            icon: Icon(Icons.shopping_bag_outlined),
+            label: 'store',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
