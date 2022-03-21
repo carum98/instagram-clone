@@ -42,4 +42,14 @@ class PostRepository {
       print(e);
     }
   }
+
+  Future<List<PostModel>> getPosts({required UserModel user}) async {
+    try {
+      final snapshot = await _store.collection('posts').where('userId', isEqualTo: user.uid).get();
+      return snapshot.docs.map((doc) => PostModel.fromMap(doc.data(), user)).toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

@@ -1,39 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/core/auth.dart';
+import 'package:instagram_clone/core/post_repository.dart';
+import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/model/user_model.dart';
+import 'package:instagram_clone/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final UserModel? user;
+  const ProfilePage({Key? key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _user = user ?? context.read<UserProvider>().user;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.login),
-            onPressed: () {
-              Auth().logout();
+            icon: const Icon(Icons.notifications_none),
+            onPressed: () {},
+          ),
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                child: Text('Logout'),
+                value: 'logout',
+              ),
+            ],
+            onSelected: (v) {
+              if (v == 'logout') Auth().logout();
             },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: FutureBuilder<UserModel>(
-          future: Auth().getUser(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return _Profile(user: snapshot.data!);
-            }
-
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
+      body: Column(
+        children: [
+          _Profile(user: _user),
+          _PostsGrid(user: _user),
+        ],
       ),
     );
   }
@@ -45,27 +51,30 @@ class _Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              maxRadius: 40,
-              backgroundImage: NetworkImage(user.photoUrl),
-            ),
-            const Spacer(),
-            _buildCounter('Publicacioines', 15),
-            const Spacer(),
-            _buildCounter('Seguidores', 10),
-            const Spacer(),
-            _buildCounter('Seguidos', 20),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(user.name),
-        Text(user.bio)
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                maxRadius: 40,
+                backgroundImage: NetworkImage(user.photoUrl),
+              ),
+              const Spacer(),
+              _buildCounter('Publicacioines', 15),
+              const Spacer(),
+              _buildCounter('Seguidores', 10),
+              const Spacer(),
+              _buildCounter('Seguidos', 20),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(user.name),
+          Text(user.bio),
+        ],
+      ),
     );
   }
 
@@ -82,5 +91,42 @@ class _Profile extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _PostsGrid extends StatelessWidget {
+  final UserModel user;
+  const _PostsGrid({Key? key, required this.user}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<PostModel>>(
+        future: PostRepository().getPosts(user: user),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final posts = snapshot.data!;
+
+            return Expanded(
+              child: GridView.builder(
+                itemCount: posts.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
+                ),
+                itemBuilder: (_, index) {
+                  final post = posts[index];
+
+                  return Image.network(
+                    post.imageUrl,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            );
+          }
+
+          return Container();
+        });
   }
 }

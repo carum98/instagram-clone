@@ -66,7 +66,13 @@ class FeedPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
-                          CircleAvatar(backgroundImage: NetworkImage(post.user.photoUrl)),
+                          GestureDetector(
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(post.user.photoUrl),
+                            ),
+                            onTap: () =>
+                                Navigator.of(context).pushNamed(PROFILE, arguments: post.user),
+                          ),
                           const SizedBox(width: 8),
                           Text(post.user.name),
                           const Spacer(),
