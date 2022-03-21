@@ -5,3 +5,5 @@ const REGISTER = '/register';
 const MAIN = '/feed';
 
 const LOADING = '/loading';
+
+const CREATE_POST = '/create_post';

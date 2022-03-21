@@ -4,6 +4,8 @@ import 'package:instagram_clone/pages/profile_page.dart';
 import 'package:instagram_clone/pages/reels_page.dart';
 import 'package:instagram_clone/pages/search_page.dart';
 import 'package:instagram_clone/pages/store_page.dart';
+import 'package:instagram_clone/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -15,6 +17,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   final _pageController = PageController();
+
+  @override
+  void initState() {
+    context.read<UserProvider>().getUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

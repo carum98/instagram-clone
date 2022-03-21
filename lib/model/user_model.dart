@@ -56,11 +56,6 @@ class UserModel {
   factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'UserModel(uid: $uid, name: $name, email: $email, photoUrl: $photoUrl, bio: $bio)';
-  }
-
-  @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 

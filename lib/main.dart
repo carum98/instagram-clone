@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/routers/router_gerenator.dart';
 import 'package:instagram_clone/routers/router_names.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,16 +39,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
+    return Provider(
+      create: (_) => UserProvider(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+        ),
+        navigatorKey: navigator,
+        initialRoute: LOADING,
+        onGenerateRoute: RouterGenerator.generateRoute,
       ),
-      navigatorKey: navigator,
-      initialRoute: LOADING,
-      onGenerateRoute: RouterGenerator.generateRoute,
     );
   }
 }

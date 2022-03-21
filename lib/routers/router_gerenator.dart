@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram_clone/pages/loading_page.dart';
 import 'package:instagram_clone/routers/router_names.dart';
 
+import '../pages/create_post_page.dart';
 import '../pages/main_page.dart';
 import '../pages/login_page.dart';
 import '../pages/register_page.dart';
@@ -19,6 +20,8 @@ class RouterGenerator {
         return MaterialPageRoute(builder: (_) => const RegisterPage());
       case MAIN:
         return MaterialPageRoute(builder: (_) => const MainPage());
+      case CREATE_POST:
+        return MaterialPageRoute(builder: (_) => const CreatePostPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
