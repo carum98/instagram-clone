@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/provider/post_provider.dart';
 import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/routers/router_gerenator.dart';
 import 'package:instagram_clone/routers/router_names.dart';
@@ -39,8 +40,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => UserProvider(),
+    return MultiProvider(
+      providers: [
+        Provider<UserProvider>(create: (_) => UserProvider()),
+        Provider<PostProvider>(create: (_) => PostProvider()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,

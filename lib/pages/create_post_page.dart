@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/core/post_repository.dart';
@@ -19,12 +18,14 @@ class CreatePostPage extends StatelessWidget {
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               PostRepository().createPost(
                 post: _post,
                 image: _image,
                 user: context.read<UserProvider>().user,
               );
+
+              Navigator.pop(context);
             },
             child: const Text('Publicar'),
           ),

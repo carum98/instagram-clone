@@ -42,37 +42,4 @@ class PostRepository {
       print(e);
     }
   }
-
-  Future<List<PostModel>> getPosts() async {
-    try {
-      QuerySnapshot querySnapshot = await _store.collection('posts').get();
-
-      final List<UserModel> users = [];
-      final List<PostModel> posts = [];
-
-      for (DocumentSnapshot doc in querySnapshot.docs) {
-        final userId = (doc.data() as Map<String, dynamic>)['userId'] as String;
-        UserModel user;
-
-        if (!users.any((user) => user.uid == userId)) {
-          final userDoc = await _store.collection('users').doc(userId).get();
-
-          final userRaw = userDoc.data() as Map<String, dynamic>;
-          user = UserModel.fromMap(userRaw);
-
-          users.add(user);
-        } else {
-          user = users.firstWhere((user) => user.uid == userId);
-        }
-
-        posts.add(PostModel.fromMap(doc.data() as Map<String, dynamic>, user));
-      }
-
-      return posts;
-    } catch (e) {
-      print(e);
-
-      return [];
-    }
-  }
 }

@@ -4,6 +4,7 @@ import 'package:instagram_clone/pages/profile_page.dart';
 import 'package:instagram_clone/pages/reels_page.dart';
 import 'package:instagram_clone/pages/search_page.dart';
 import 'package:instagram_clone/pages/store_page.dart';
+import 'package:instagram_clone/provider/post_provider.dart';
 import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     context.read<UserProvider>().getUser();
+    context.read<PostProvider>().fetchPosts();
+
     super.initState();
   }
 
