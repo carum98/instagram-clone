@@ -22,12 +22,20 @@ class PostProvider {
 
   Future<void> fetchPosts() async {
     _store.collection('posts').orderBy('createdAt').snapshots().listen((snapshot) {
-      final data = snapshot.docChanges
-          .where((e) => e.type == DocumentChangeType.added)
-          .map((e) => e.doc.data() as Map<String, dynamic>)
-          .toList();
+      final added = snapshot.docChanges.where((e) => e.type == DocumentChangeType.added).map((e) {
+        final map = e.doc.data() as Map<String, dynamic>;
+        map['uid'] = e.doc.id;
+        return map;
+      }).toList();
 
-      _onChange(data);
+      if (added.isNotEmpty) {
+        _onChange(added);
+      }
+
+      snapshot.docChanges.where((e) => e.type == DocumentChangeType.modified).forEach((e) {
+        final likes = List<String>.from((e.doc.data() as Map<String, dynamic>)['likes']);
+        _likePost(e.doc.id, likes);
+      });
     });
   }
 
@@ -54,6 +62,12 @@ class PostProvider {
 
   void _addPosts(PostModel post) {
     _posts.insert(0, post);
+    postSink(_posts);
+  }
+
+  void _likePost(String postId, List<String> likes) {
+    final index = _posts.indexWhere((e) => e.uid == postId);
+    _posts[index] = _posts[index].copyWith(likes: likes);
     postSink(_posts);
   }
 }

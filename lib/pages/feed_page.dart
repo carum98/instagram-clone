@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/core/post_repository.dart';
 import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/provider/post_provider.dart';
+import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/routers/router_names.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -10,6 +12,13 @@ class FeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _like(PostModel post) {
+      PostRepository().likePost(
+        post: post,
+        user: context.read<UserProvider>().user,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Instagram'),
@@ -59,6 +68,7 @@ class FeedPage extends StatelessWidget {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final post = snapshot.data![index];
+              final isLiked = post.likes.contains(context.read<UserProvider>().user.uid);
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,11 +91,14 @@ class FeedPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Image(
-                    image: NetworkImage(post.imageUrl),
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  GestureDetector(
+                    child: Image(
+                      image: NetworkImage(post.imageUrl),
+                      height: 250,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                    onDoubleTap: () => _like(post),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10),
@@ -93,14 +106,19 @@ class FeedPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: const [
-                            Icon(Icons.favorite_border_outlined),
-                            SizedBox(width: 15),
-                            Icon(Icons.comment_outlined),
-                            SizedBox(width: 15),
-                            Icon(Icons.send_outlined),
-                            Spacer(),
-                            Icon(Icons.bookmark_border_outlined),
+                          children: [
+                            GestureDetector(
+                              onTap: () => _like(post),
+                              child: isLiked
+                                  ? const Icon(Icons.favorite, color: Colors.red)
+                                  : const Icon(Icons.favorite_border_outlined),
+                            ),
+                            const SizedBox(width: 15),
+                            const Icon(Icons.comment_outlined),
+                            const SizedBox(width: 15),
+                            const Icon(Icons.send_outlined),
+                            const Spacer(),
+                            const Icon(Icons.bookmark_border_outlined),
                           ],
                         ),
                         Text('${post.likes.length} likes'),

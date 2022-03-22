@@ -52,4 +52,16 @@ class PostRepository {
       return [];
     }
   }
+
+  Future<void> likePost({required PostModel post, required UserModel user}) async {
+    try {
+      await _store.collection('posts').doc(post.uid).update({
+        'likes': post.likes.contains(user.uid)
+            ? FieldValue.arrayRemove([user.uid])
+            : FieldValue.arrayUnion([user.uid]),
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 }
