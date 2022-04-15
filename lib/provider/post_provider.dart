@@ -34,7 +34,8 @@ class PostProvider {
 
       snapshot.docChanges.where((e) => e.type == DocumentChangeType.modified).forEach((e) {
         final likes = List<String>.from((e.doc.data() as Map<String, dynamic>)['likes']);
-        _likePost(e.doc.id, likes);
+        final comments = List<String>.from((e.doc.data() as Map<String, dynamic>)['comments']);
+        _likePost(e.doc.id, likes, comments);
       });
     });
   }
@@ -65,9 +66,9 @@ class PostProvider {
     postSink(_posts);
   }
 
-  void _likePost(String postId, List<String> likes) {
+  void _likePost(String postId, List<String> likes, comments) {
     final index = _posts.indexWhere((e) => e.uid == postId);
-    _posts[index] = _posts[index].copyWith(likes: likes);
+    _posts[index] = _posts[index].copyWith(likes: likes, comments: comments);
     postSink(_posts);
   }
 }

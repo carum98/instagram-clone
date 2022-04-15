@@ -123,9 +123,12 @@ class FeedPage extends StatelessWidget {
                         ),
                         Text('${post.likes.length} likes'),
                         Text(post.post),
-                        Text(
-                          'Show ${[].length} comments',
-                          style: const TextStyle(color: Colors.grey),
+                        GestureDetector(
+                          child: Text(
+                            'Show ${post.comments.length} comments',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          onTap: () => Navigator.of(context).pushNamed(COMMENT, arguments: post),
                         ),
                         Text(
                           timeago.format(post.createdAt),

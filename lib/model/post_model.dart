@@ -5,7 +5,7 @@ class PostModel {
   final String? uid;
   final String imageUrl;
   final String post;
-  final List<String> likes;
+  final List<String> likes, comments;
   final DateTime createdAt;
   final UserModel user;
 
@@ -14,6 +14,7 @@ class PostModel {
     required this.imageUrl,
     required this.post,
     required this.likes,
+    required this.comments,
     required this.createdAt,
     required this.user,
   });
@@ -23,12 +24,14 @@ class PostModel {
     String? imageUrl,
     String? post,
     List<String>? likes,
+    comments,
   }) {
     return PostModel(
       uid: uid ?? this.uid,
       imageUrl: imageUrl ?? this.imageUrl,
       post: post ?? this.post,
       likes: likes ?? this.likes,
+      comments: comments ?? this.comments,
       createdAt: createdAt,
       user: user,
     );
@@ -50,6 +53,7 @@ class PostModel {
       imageUrl: map['imageUrl'] ?? '',
       post: map['post'] ?? '',
       likes: List<String>.from(map['likes']),
+      comments: List<String>.from(map['comments']),
       createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(),
       user: user,
     );

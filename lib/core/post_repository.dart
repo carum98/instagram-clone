@@ -33,6 +33,7 @@ class PostRepository {
         imageUrl: url,
         post: post,
         likes: [],
+        comments: [],
         createdAt: DateTime.now(),
         user: user,
       );

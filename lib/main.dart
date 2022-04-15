@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/provider/comment_provider.dart';
 import 'package:instagram_clone/provider/post_provider.dart';
 import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/routers/router_gerenator.dart';
