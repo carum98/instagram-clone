@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/core/post_repository.dart';
 import 'package:instagram_clone/model/post_model.dart';
+import 'package:instagram_clone/model/user_model.dart';
 import 'package:instagram_clone/provider/post_provider.dart';
-import 'package:instagram_clone/provider/user_provider.dart';
 import 'package:instagram_clone/routers/router_names.dart';
+import 'package:instagram_clone/widgets/post_tile.dart';
+import 'package:instagram_clone/widgets/user_photo.dart';
 import 'package:provider/provider.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class FeedPage extends StatelessWidget {
   const FeedPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    void _like(PostModel post) {
-      PostRepository().likePost(
-        post: post,
-        user: context.read<UserProvider>().user,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Instagram'),
+        title: const Image(
+          image: AssetImage('assets/logo.png'),
+          height: 35,
+        ),
         centerTitle: false,
         actions: [
           PopupMenuButton(
@@ -51,7 +47,7 @@ class FeedPage extends StatelessWidget {
             icon: const Icon(Icons.add_box_outlined),
           ),
           IconButton(
-            icon: const Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite_border),
             onPressed: () {},
           ),
           IconButton(
@@ -60,88 +56,58 @@ class FeedPage extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<List<PostModel>>(
-        stream: context.read<PostProvider>().postsStream,
-        initialData: context.read<PostProvider>().posts,
-        builder: (context, snapshot) {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              final post = snapshot.data![index];
-              final isLiked = post.likes.contains(context.read<UserProvider>().user.uid);
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: StreamBuilder<List<UserModel>>(
+              stream: context.read<PostProvider>().usersStream,
+              initialData: context.read<PostProvider>().users,
+              builder: (context, snapshot) => SizedBox(
+                height: 80,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (_, index) {
+                    final user = snapshot.data![index];
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(post.user.photoUrl),
-                          ),
-                          onTap: () =>
-                              Navigator.of(context).pushNamed(PROFILE, arguments: post.user),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(post.user.name),
-                        const Spacer(),
-                        const Icon(Icons.more_vert),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    child: Image(
-                      image: NetworkImage(post.imageUrl),
-                      height: 250,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    onDoubleTap: () => _like(post),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () => _like(post),
-                              child: isLiked
-                                  ? const Icon(Icons.favorite, color: Colors.red)
-                                  : const Icon(Icons.favorite_border_outlined),
+                    return SizedBox(
+                      width: 70,
+                      child: Column(
+                        children: [
+                          UserPhoto(photoUrl: user.photoUrl, size: 24),
+                          Expanded(
+                            child: Text(
+                              user.name,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 8),
                             ),
-                            const SizedBox(width: 15),
-                            const Icon(Icons.comment_outlined),
-                            const SizedBox(width: 15),
-                            const Icon(Icons.send_outlined),
-                            const Spacer(),
-                            const Icon(Icons.bookmark_border_outlined),
-                          ],
-                        ),
-                        Text('${post.likes.length} likes'),
-                        Text(post.post),
-                        GestureDetector(
-                          child: Text(
-                            'Show ${post.comments.length} comments',
-                            style: const TextStyle(color: Colors.grey),
                           ),
-                          onTap: () => Navigator.of(context).pushNamed(COMMENT, arguments: post),
-                        ),
-                        Text(
-                          timeago.format(post.createdAt),
-                          style: const TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+          StreamBuilder<List<PostModel>>(
+            stream: context.read<PostProvider>().postsStream,
+            initialData: context.read<PostProvider>().posts,
+            builder: (context, snapshot) {
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (_, index) {
+                    final post = snapshot.data![index];
+                    return PostTile(post: post);
+                  },
+                  childCount: snapshot.data!.length,
+                ),
               );
             },
-          );
-        },
+          )
+        ],
       ),
     );
   }

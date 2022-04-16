@@ -10,15 +10,21 @@ class PostProvider {
   final List<UserModel> _users = [];
 
   final _postController = StreamController<List<PostModel>>.broadcast();
+  final _userController = StreamController<List<UserModel>>.broadcast();
 
   Function(List<PostModel>) get postSink => _postController.sink.add;
   Stream<List<PostModel>> get postsStream => _postController.stream;
 
+  Function(List<UserModel>) get userSink => _userController.sink.add;
+  Stream<List<UserModel>> get usersStream => _userController.stream;
+
   void dispose() {
     _postController.close();
+    _userController.close();
   }
 
   List<PostModel> get posts => _posts;
+  List<UserModel> get users => _users;
 
   Future<void> fetchPosts() async {
     _store.collection('posts').orderBy('createdAt').snapshots().listen((snapshot) {
@@ -51,7 +57,7 @@ class PostProvider {
         final userRaw = userDoc.data() as Map<String, dynamic>;
         user = UserModel.fromMap(userRaw);
 
-        _users.add(user);
+        _addUsers(user);
       } else {
         user = _users.firstWhere((user) => user.uid == userId);
       }
@@ -64,6 +70,11 @@ class PostProvider {
   void _addPosts(PostModel post) {
     _posts.insert(0, post);
     postSink(_posts);
+  }
+
+  void _addUsers(UserModel user) {
+    _users.add(user);
+    userSink(_users);
   }
 
   void _likePost(String postId, List<String> likes, comments) {
