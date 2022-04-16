@@ -4,6 +4,7 @@ import 'package:instagram_clone/core/post_repository.dart';
 import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/model/user_model.dart';
 import 'package:instagram_clone/provider/user_provider.dart';
+import 'package:instagram_clone/widgets/user_photo.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -16,13 +17,14 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text(_user.name),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_none),
+            icon: const Icon(Icons.add_box_outlined),
             onPressed: () {},
           ),
           PopupMenuButton(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.menu),
             itemBuilder: (_) => const [
               PopupMenuItem(
                 child: Text('Logout'),
@@ -58,12 +60,13 @@ class _Profile extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                maxRadius: 40,
-                backgroundImage: NetworkImage(user.photoUrl),
+              UserPhoto(
+                photoUrl: user.photoUrl,
+                size: 35,
               ),
+              const SizedBox(width: 15),
               const Spacer(),
-              _buildCounter('Publicacioines', 15),
+              _buildCounter('Publicaciones', 15),
               const Spacer(),
               _buildCounter('Seguidores', 10),
               const Spacer(),
@@ -71,7 +74,6 @@ class _Profile extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text(user.name),
           Text(user.bio),
         ],
       ),
@@ -83,7 +85,7 @@ class _Profile extends StatelessWidget {
       children: [
         Text(
           '$counter',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         Text(
           label,

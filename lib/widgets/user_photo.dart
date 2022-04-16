@@ -14,7 +14,7 @@ class UserPhoto extends StatelessWidget {
         backgroundColor: Colors.black,
         radius: size + 2,
         child: CircleAvatar(
-          backgroundImage: NetworkImage(photoUrl),
+          backgroundImage: photoUrl.isEmpty ? null : NetworkImage(photoUrl),
           radius: size,
         ),
       ),
