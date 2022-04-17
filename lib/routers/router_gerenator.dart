@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/model/user_model.dart';
 import 'package:instagram_clone/pages/loading_page.dart';
+import 'package:instagram_clone/pages/story_page.dart';
 import 'package:instagram_clone/routers/router_names.dart';
 
 import '../pages/comment_page.dart';
@@ -32,6 +33,9 @@ class RouterGenerator {
       case COMMENT:
         final post = args as PostModel;
         return MaterialPageRoute(builder: (_) => CommentPage(post: post));
+      case STORY:
+        final user = args as UserModel;
+        return MaterialPageRoute(builder: (_) => StoryPage(user: user));
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

@@ -43,6 +43,7 @@ class PostModel {
       'imageUrl': imageUrl,
       'post': post,
       'likes': likes,
+      'comments': comments,
       'createdAt': createdAt.toIso8601String(),
     };
   }

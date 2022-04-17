@@ -75,7 +75,10 @@ class FeedPage extends StatelessWidget {
                       width: 70,
                       child: Column(
                         children: [
-                          UserPhoto(photoUrl: user.photoUrl, size: 24),
+                          GestureDetector(
+                            child: UserPhoto(photoUrl: user.photoUrl, size: 24),
+                            onTap: () => Navigator.pushNamed(context, STORY, arguments: user),
+                          ),
                           Expanded(
                             child: Text(
                               user.name,

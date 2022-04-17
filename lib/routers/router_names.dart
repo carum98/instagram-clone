@@ -10,3 +10,4 @@ const CREATE_POST = '/create_post';
 
 const PROFILE = '/profile';
 const COMMENT = '/comment';
+const STORY = '/story';
