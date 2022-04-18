@@ -3,18 +3,54 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/bloc/bloc_provider.dart';
 import 'package:instagram_clone/bloc/story_bloc.dart';
+import 'package:instagram_clone/core/storie_repository.dart';
+import 'package:instagram_clone/model/storie_model.dart';
 import 'package:instagram_clone/model/user_model.dart';
 import 'package:instagram_clone/widgets/user_photo.dart';
 
-class StoryPage extends StatefulWidget {
+class StoryPage extends StatelessWidget {
   final UserModel user;
   const StoryPage({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<StoryPage> createState() => _StoryPageState();
+  Widget build(BuildContext context) {
+    final bloc = StoryBloc(
+      user: user,
+      repo: StorieRepository(),
+    );
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            BlocProvider<StoryBloc>(
+              bloc: bloc,
+              child: Expanded(
+                child: Stack(
+                  children: [
+                    const _StoryList(),
+                    _UserInformation(user: user),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const _MessageStory(),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _StoryPageState extends State<StoryPage> {
+class _StoryList extends StatefulWidget {
+  const _StoryList({Key? key}) : super(key: key);
+
+  @override
+  State<_StoryList> createState() => __StoryListState();
+}
+
+class __StoryListState extends State<_StoryList> {
   late PageController _pageController;
   late StoryBloc _bloc;
   Timer? _timer;
@@ -24,11 +60,12 @@ class _StoryPageState extends State<StoryPage> {
     super.initState();
 
     _pageController = PageController();
-    _bloc = StoryBloc();
+    _bloc = BlocProvider.of<StoryBloc>(context);
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       _automaticNextPage();
       _pageController.addListener(_automaticNextPage);
+      _bloc.getStories();
     });
   }
 
@@ -42,39 +79,18 @@ class _StoryPageState extends State<StoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    const stories = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.orange];
-
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            BlocProvider<StoryBloc>(
-              bloc: _bloc,
-              child: Expanded(
-                child: Stack(
-                  children: [
-                    GestureDetector(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (_, i) => _StoryView(color: stories[i]),
-                        itemCount: stories.length,
-                      ),
-                      onTapUp: _onTabDown,
-                    ),
-                    _UserInformation(
-                      user: widget.user,
-                      storiesLength: stories.length,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const _MessageStory(),
-          ],
+    return GestureDetector(
+      child: StreamBuilder<List<StorieModel>>(
+        stream: _bloc.storiesStream,
+        initialData: _bloc.stories,
+        builder: (_, snapshot) => PageView.builder(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (_, i) => _StoryView(story: snapshot.data![i]),
+          itemCount: snapshot.data!.length,
         ),
       ),
+      onTapUp: _onTabDown,
     );
   }
 
@@ -110,8 +126,7 @@ class _StoryPageState extends State<StoryPage> {
 }
 
 class _StoryBars extends StatefulWidget {
-  final int storiesLength;
-  const _StoryBars({Key? key, required this.storiesLength}) : super(key: key);
+  const _StoryBars({Key? key}) : super(key: key);
 
   @override
   State<_StoryBars> createState() => _StoryBarsState();
@@ -146,7 +161,7 @@ class _StoryBarsState extends State<_StoryBars> with SingleTickerProviderStateMi
 
           return Row(
             children: List.generate(
-              widget.storiesLength,
+              BlocProvider.of<StoryBloc>(context).stories.length,
               (index) => _StoryBar(
                 watched: snapshot.data! >= index,
                 active: snapshot.data == index,
@@ -199,17 +214,15 @@ class _StoryBar extends StatelessWidget {
 
 class _UserInformation extends StatelessWidget {
   final UserModel user;
-  final int storiesLength;
-  const _UserInformation({Key? key, required this.user, required this.storiesLength})
-      : super(key: key);
+  const _UserInformation({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _StoryBars(storiesLength: storiesLength),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: _StoryBars(),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -235,15 +248,18 @@ class _UserInformation extends StatelessWidget {
 }
 
 class _StoryView extends StatelessWidget {
-  final Color color;
-  const _StoryView({Key? key, required this.color}) : super(key: key);
+  final StorieModel story;
+  const _StoryView({Key? key, required this.story}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color,
         borderRadius: BorderRadius.circular(10),
+      ),
+      child: Image(
+        image: NetworkImage(story.imageUrl),
+        fit: BoxFit.cover,
       ),
     );
   }

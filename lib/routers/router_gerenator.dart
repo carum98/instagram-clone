@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/model/user_model.dart';
+import 'package:instagram_clone/pages/create_storie_page.dart';
 import 'package:instagram_clone/pages/loading_page.dart';
 import 'package:instagram_clone/pages/story_page.dart';
 import 'package:instagram_clone/routers/router_names.dart';
@@ -27,6 +28,8 @@ class RouterGenerator {
         return MaterialPageRoute(builder: (_) => const MainPage());
       case CREATE_POST:
         return MaterialPageRoute(builder: (_) => const CreatePostPage());
+      case CREATE_STORY:
+        return MaterialPageRoute(builder: (_) => const CreateStoriePage());
       case PROFILE:
         final user = args as UserModel;
         return MaterialPageRoute(builder: (_) => ProfilePage(user: user));

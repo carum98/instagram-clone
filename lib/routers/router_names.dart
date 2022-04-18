@@ -7,6 +7,7 @@ const MAIN = '/feed';
 const LOADING = '/loading';
 
 const CREATE_POST = '/create_post';
+const CREATE_STORY = '/create_storie';
 
 const PROFILE = '/profile';
 const COMMENT = '/comment';

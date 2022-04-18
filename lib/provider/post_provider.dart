@@ -6,8 +6,9 @@ import 'package:instagram_clone/model/user_model.dart';
 
 class PostProvider {
   final FirebaseFirestore _store = FirebaseFirestore.instance;
+
   final List<PostModel> _posts = [];
-  final List<UserModel> _users = [];
+  final List<UserModel> _usersTmp = [], _users = [];
 
   final _postController = StreamController<List<PostModel>>.broadcast();
   final _userController = StreamController<List<UserModel>>.broadcast();
@@ -46,21 +47,43 @@ class PostProvider {
     });
   }
 
+  void fetchStoriesStories() {
+    _store.collection('stories').snapshots().listen((snapshot) async {
+      final added = snapshot.docChanges
+          .where((e) => e.type == DocumentChangeType.added)
+          .map((e) => e.doc.data() as Map<String, dynamic>)
+          .toList();
+
+      for (var storie in added) {
+        final userId = storie['user'] as String;
+        final user = await _getUser(userId);
+
+        if (!_users.contains(user)) _addUsers(user);
+      }
+    });
+  }
+
+  Future<UserModel> _getUser(String uid) async {
+    UserModel user;
+
+    if (!_usersTmp.any((user) => user.uid == uid)) {
+      final userDoc = await _store.collection('users').doc(uid).get();
+
+      final userRaw = userDoc.data() as Map<String, dynamic>;
+      user = UserModel.fromMap(userRaw);
+
+      _usersTmp.add(user);
+    } else {
+      user = _usersTmp.firstWhere((user) => user.uid == uid);
+    }
+
+    return user;
+  }
+
   void _onChange(List<Map<String, dynamic>> postData) async {
     for (var post in postData) {
       final userId = post['userId'] as String;
-      UserModel user;
-
-      if (!_users.any((user) => user.uid == userId)) {
-        final userDoc = await _store.collection('users').doc(userId).get();
-
-        final userRaw = userDoc.data() as Map<String, dynamic>;
-        user = UserModel.fromMap(userRaw);
-
-        _addUsers(user);
-      } else {
-        user = _users.firstWhere((user) => user.uid == userId);
-      }
+      final user = await _getUser(userId);
 
       final postModel = PostModel.fromMap(post, user);
       if (!_posts.contains(postModel)) _addPosts(postModel);
@@ -73,7 +96,7 @@ class PostProvider {
   }
 
   void _addUsers(UserModel user) {
-    _users.add(user);
+    _users.insert(0, user);
     userSink(_users);
   }
 

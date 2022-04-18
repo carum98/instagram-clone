@@ -22,9 +22,14 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     context.read<UserProvider>().getUser();
-    context.read<PostProvider>().fetchPosts();
+    inizialize();
 
     super.initState();
+  }
+
+  void inizialize() async {
+    await context.read<PostProvider>().fetchPosts();
+    context.read<PostProvider>().fetchStoriesStories();
   }
 
   @override

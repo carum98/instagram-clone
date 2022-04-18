@@ -27,21 +27,24 @@ class FeedPage extends StatelessWidget {
                 value: 'post',
               ),
               PopupMenuItem(
-                child: Text('Historial'),
-                value: 'history',
+                child: Text('Historia'),
+                value: 'story',
               ),
-              PopupMenuItem(
-                child: Text('Reel'),
-                value: 'reel',
-              ),
-              PopupMenuItem(
-                child: Text('Video en vivo'),
-                value: 'live',
-              ),
+              // PopupMenuItem(
+              //   child: Text('Reel'),
+              //   value: 'reel',
+              // ),
+              // PopupMenuItem(
+              //   child: Text('Video en vivo'),
+              //   value: 'live',
+              // ),
             ],
             onSelected: (v) {
               if (v == 'post') {
                 Navigator.of(context).pushNamed(CREATE_POST);
+              }
+              if (v == 'story') {
+                Navigator.of(context).pushNamed(CREATE_STORY);
               }
             },
             icon: const Icon(Icons.add_box_outlined),
