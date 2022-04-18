@@ -63,9 +63,8 @@ class __StoryListState extends State<_StoryList> {
     _bloc = BlocProvider.of<StoryBloc>(context);
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _automaticNextPage();
       _pageController.addListener(_automaticNextPage);
-      _bloc.getStories();
+      _bloc.getStories().then((_) => _automaticNextPage());
     });
   }
 

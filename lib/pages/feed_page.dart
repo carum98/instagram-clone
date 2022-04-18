@@ -30,10 +30,10 @@ class FeedPage extends StatelessWidget {
                 child: Text('Historia'),
                 value: 'story',
               ),
-              // PopupMenuItem(
-              //   child: Text('Reel'),
-              //   value: 'reel',
-              // ),
+              PopupMenuItem(
+                child: Text('Reel'),
+                value: 'reel',
+              ),
               // PopupMenuItem(
               //   child: Text('Video en vivo'),
               //   value: 'live',
@@ -45,6 +45,9 @@ class FeedPage extends StatelessWidget {
               }
               if (v == 'story') {
                 Navigator.of(context).pushNamed(CREATE_STORY);
+              }
+              if (v == 'reel') {
+                Navigator.of(context).pushNamed(CREATE_REEL);
               }
             },
             icon: const Icon(Icons.add_box_outlined),

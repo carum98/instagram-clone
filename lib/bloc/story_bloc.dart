@@ -31,7 +31,7 @@ class StoryBloc extends Bloc {
     _pageController.close();
   }
 
-  void getStories() async {
+  Future<void> getStories() async {
     final stories = await repo.getStories(user);
     _stories = stories;
     changeStories(stories);

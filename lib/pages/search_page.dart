@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/model/post_model.dart';
 import 'package:instagram_clone/provider/post_provider.dart';
-import 'package:instagram_clone/widgets/user_photo.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatelessWidget {
@@ -16,18 +15,21 @@ class SearchPage extends StatelessWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    isDense: true,
-                    hintText: 'Search',
-                    prefixIcon: const Icon(Icons.search, size: 25),
-                    hintStyle: const TextStyle(fontSize: 13),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
+                child: SizedBox(
+                  height: 35,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      isDense: true,
+                      hintText: 'Search',
+                      prefixIcon: const Icon(Icons.search, size: 20),
+                      hintStyle: const TextStyle(fontSize: 13),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: EdgeInsets.zero,
                     ),
-                    contentPadding: EdgeInsets.zero,
                   ),
                 ),
               ),

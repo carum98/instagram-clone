@@ -53,6 +53,8 @@ class _Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMain = context.read<UserProvider>().user.uid == user.uid;
+
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -75,6 +77,53 @@ class _Profile extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(user.bio),
+          Row(
+            children: [
+              if (isMain) ...[
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Editar perfil'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      side: BorderSide(color: Colors.grey[700]!),
+                    ),
+                  ),
+                ),
+              ],
+              if (!isMain) ...[
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Seguir'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue[800],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Mensaje'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      side: BorderSide(color: Colors.grey[700]!),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(width: 5),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Icon(Icons.person_add),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey.withOpacity(0.2),
+                  side: BorderSide(color: Colors.grey[700]!),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
