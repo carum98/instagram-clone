@@ -42,6 +42,7 @@ dependencies:
   uuid: ^3.0.6
   provider: ^6.0.2
   timeago: ^3.2.2
+  photo_manager: ^2.0.8
 
 dev_dependencies:
   flutter_test:

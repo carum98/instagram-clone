@@ -5,7 +5,9 @@ import 'package:instagram_clone/provider/post_provider.dart';
 import 'package:instagram_clone/routers/router_names.dart';
 import 'package:instagram_clone/widgets/post_tile.dart';
 import 'package:instagram_clone/widgets/user_photo.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' hide Create;
+
+import 'package:instagram_clone/pages/create_page.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -21,33 +23,47 @@ class FeedPage extends StatelessWidget {
         centerTitle: false,
         actions: [
           PopupMenuButton(
-            itemBuilder: (context) => const [
+            itemBuilder: (context) => [
               PopupMenuItem(
-                child: Text('Publicacion'),
+                child: Row(
+                  children: const [
+                    Text('Publicacion'),
+                    Spacer(),
+                    Icon(Icons.grid_on),
+                  ],
+                ),
                 value: 'post',
               ),
               PopupMenuItem(
-                child: Text('Historia'),
+                child: Row(
+                  children: const [
+                    Text('Historia'),
+                    Spacer(),
+                    Icon(Icons.add_circle_outline),
+                  ],
+                ),
                 value: 'story',
               ),
               PopupMenuItem(
-                child: Text('Reel'),
+                child: Row(
+                  children: const [
+                    Text('Reel'),
+                    Spacer(),
+                    Icon(Icons.movie_creation_outlined),
+                  ],
+                ),
                 value: 'reel',
               ),
-              // PopupMenuItem(
-              //   child: Text('Video en vivo'),
-              //   value: 'live',
-              // ),
             ],
             onSelected: (v) {
               if (v == 'post') {
-                Navigator.of(context).pushNamed(CREATE_POST);
+                Navigator.of(context).pushNamed(CREATE, arguments: Create.post);
               }
               if (v == 'story') {
-                Navigator.of(context).pushNamed(CREATE_STORY);
+                Navigator.of(context).pushNamed(CREATE, arguments: Create.story);
               }
               if (v == 'reel') {
-                Navigator.of(context).pushNamed(CREATE_REEL);
+                Navigator.of(context).pushNamed(CREATE, arguments: Create.reel);
               }
             },
             icon: const Icon(Icons.add_box_outlined),
