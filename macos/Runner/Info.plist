@@ -32,6 +32,8 @@
 	<dict>
     <key>NSAllowsLocalNetworking</key>
     <true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>In order to access your photo library</string>
 </dict>
 </dict>
 </plist>
