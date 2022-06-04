@@ -17,6 +17,6 @@ https://user-images.githubusercontent.com/40967143/169200684-3370b5d0-ac04-4878-
 
 <img src="https://github.com/carum98/instagram-clone/blob/main/screenshots/comments.png" height="800"> <img src="https://github.com/carum98/instagram-clone/blob/main/screenshots/search.png" height="800"> 
 
-<img src="https://github.com/carum98/instagram-clone/blob/main/screenshots/profile.png" height="800">
+<img src="https://github.com/carum98/instagram-clone/blob/main/screenshots/profile.png" height="800"> <img src="https://github.com/carum98/instagram-clone/blob/main/screenshots/new-post.png" height="800">
 
 <img src="https://github.com/carum98/instagram-clone/blob/main/screenshots/platforms.png">
